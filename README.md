@@ -1,95 +1,158 @@
-Rust Code Collector
+```md
+# 🚀 Rust Code Collector
 
-A desktop GUI application built with Rust and egui. It allows you to select specific files from a project directory and export them either into a single text file (for LLM context/documentation) or replicate the folder structure for backup/migration.
-
-Features
-
-Tree View: Recursive file explorer with checkboxes.
-
-Smart Filtering: Ignores node_modules, vendor, .git, etc.
-
-Syntax Highlighting: Visual cues for Rust, JS, HTML, PHP, Laravel Blade, etc.
-
-Export Mode 1 (Single File): Combines all selected code into full_code.txt.
-
-Export Mode 2 (Separate Files): Copies selected files to a new directory while preserving the original folder structure.
-
-Clipboard Support: One-click copy selected code.
-
-Prerequisites
-
-Before running, ensure you have Rust and Cargo installed.
-Install Rust
-
-Linux Users Only
-
-You may need to install development libraries for the GUI windowing system:
-
-sudo apt-get install libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libssl-dev
-
-
-How to Run
-
-Clone the repository:
-
-git clone [https://github.com/dewakuneiei/code-collector.git](https://github.com/dewakuneiei/code-collector.git)
-cd code-collector
-
-
-Run in Debug Mode (Faster compilation, slower app):
-
-cargo run
-
-
-Run in Release Mode (Optimized, smaller binary):
-Use this for actual daily use.
-
-cargo run --release
-
-
-Project Structure
-
-src/main.rs: Contains the entire application logic, UI rendering, and file handling.
-
-Cargo.toml: Manages dependencies (eframe, egui, rfd, arboard).
-
-Usage
-
-Click Open Project and select your coding project folder.
-
-Expand folders and check the boxes for the files you want to include.
-
-Select your Export Mode at the bottom:
-
-Single File: Best for pasting into ChatGPT/Claude.
-
-Separate Files: Best for extracting specific parts of a codebase to a new location.
-
-Click Save Selected or Copy to Clipboard.
-
+A powerful desktop GUI tool built with **Rust** and **egui**, designed for developers who need quick code extraction, structured exporting, and clean project navigation. Perfect for preparing context for LLMs, creating backups, migrating code, or extracting modules from large codebases.
 
 ---
 
-### 3. Step-by-Step: What to do after Cloning
+## ✨ Features
 
-If you are setting this up for the very first time on a new machine (or if a friend clones your repo):
+### 📂 Recursive Tree View
+- Explore your project using a nested folder UI.
+- Folders and files are displayed in a familiar tree structure.
 
-**Step 1: Install Rust**
-If you haven't already:
+### 🔍 Real-Time Search
+- Filter files and directories instantly.
+- Automatically expands folders to reveal matching items.
+
+### 🧹 Smart Filtering
+Ignores common clutter directories automatically:
+```
+
+.git, node_modules, vendor, target, dist, build, storage, **pycache**, .idea, .vscode, etc.
+
+````
+
+### 🎨 Syntax Highlighting (UI)
+Colored file types for better readability:
+- Rust (.rs)
+- JavaScript / TypeScript
+- HTML / CSS
+- PHP
+- Laravel Blade
+- And more
+
+---
+
+## 📦 Export Modes
+
+### **Mode 1 — Single File Export**
+- Merges all selected files into `full_code.txt`.
+- Ideal for ChatGPT, Claude, and documentation.
+- ✔ Auto-opens the generated file in your default editor.
+
+### **Mode 2 — Structured Folder Export**
+- Copies selected files into a new directory.
+- Preserves original folder structure (e.g., `src/main.rs` → `src/main.rs`).
+- ✔ Auto-opens the output folder in your OS file explorer.
+
+### 📋 Clipboard Support
+- One-click **Copy Selected** → immediately placed in your system clipboard.
+
+---
+
+## 🛠 Prerequisites
+
+Ensure Rust & Cargo are installed:
+
 ```bash
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+curl https://sh.rustup.rs -sSf | sh
+````
 
+### Linux Users Only
 
-Step 2: Clone the Repo
+You may need additional GUI libraries:
 
-git clone <your-repo-url>
-cd code_collector
+```bash
+sudo apt-get install libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libssl-dev
+```
 
+---
 
-Step 3: Check dependencies (Linux only)
-If you are on Windows or macOS, you can skip this. If you are on Ubuntu/Debian/WSL, run the command found in the "Prerequisites" section of the README above.
+## 🏃 How to Run
 
-Step 4: Build and Run
-This command will automatically download all dependencies listed in Cargo.toml and compile the app:
+Clone the repository:
 
+```bash
+git clone https://github.com/yourusername/code-collector.git
+cd code-collector
+```
+
+Run the application (Release Mode recommended):
+
+```bash
 cargo run --release
+```
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+ └── main.rs      # Core application logic (UI, file handling, search, export)
+Cargo.toml        # Dependencies: eframe, egui, rfd, arboard, open
+```
+
+---
+
+## 🎮 Usage Guide
+
+### 1. Open Your Project
+
+Click **Open Folder** and select the root directory of your codebase.
+
+### 2. Search & Select
+
+* Use the search bar to filter files (e.g., "service", "controller", "auth").
+* Check the boxes for everything you want to export.
+
+### 3. Choose Export Mode
+
+* **Single File** → for AI context or documentation.
+* **Separate Files** → for refactoring or migration.
+
+### 4. Perform Action
+
+* **Save Selected** → export to file or folder.
+* **Copy to Clipboard** → quick code extraction.
+
+---
+
+## 🔧 Configuration
+
+To modify ignored directories, edit `src/main.rs`:
+
+```rust
+const IGNORE_DIRS: &[&str] = &[
+    ".git", ".vscode", "node_modules", "vendor", "__pycache__",
+    ".idea", "target", "dist", "build", "coverage", ".next",
+    ".nuxt", "storage"
+];
+```
+
+---
+
+## 📜 License
+
+MIT — You are free to use, modify, and distribute.
+
+---
+
+## ⭐ Support the Project
+
+If this tool helps you, please consider giving the repository a **star** ⭐ on GitHub!
+
+```
+
+---
+
+If you want, I can also generate:
+
+✅ GitHub badges  
+✅ Screenshots section layout  
+✅ Logo banner  
+✅ Better project name suggestions  
+
+Just tell me!
+```
