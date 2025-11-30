@@ -1,0 +1,18 @@
+[package]
+name = "code_collector"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+eframe = "0.29.1"
+egui = "0.29"
+walkdir = "2.4"
+arboard = "3.4"
+rfd = "0.15"
+open = "5.3" 
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+strip = true

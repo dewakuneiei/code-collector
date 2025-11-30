@@ -1,66 +1,95 @@
-# 📂 AI Code Collector
+Rust Code Collector
 
-**AI Code Collector** is a simple Python GUI tool designed to help developers quickly gather code from a web project (HTML, CSS, JS) and merge it into a single text format. 
+A desktop GUI application built with Rust and egui. It allows you to select specific files from a project directory and export them either into a single text file (for LLM context/documentation) or replicate the folder structure for backup/migration.
 
-This is perfect for preparing context to send to AI tools like **ChatGPT, Claude, or Gemini** without manually copying and pasting dozens of files.
+Features
 
-## ✨ Features
+Tree View: Recursive file explorer with checkboxes.
 
-*   **GUI Interface:** No complex command lines. Visual selection of files.
-*   **Smart Categorization:** Automatically groups files into HTML, CSS, and JavaScript.
-*   **Clipboard Support:** Copy all selected code to your clipboard with one click.
-*   **File Exclusion:** Automatically ignores `.git`, `node_modules`, and system files.
-*   **Formatted Output:** Adds clear headers (`===== FILE: path/to/file =====`) so the AI understands the file structure.
+Smart Filtering: Ignores node_modules, vendor, .git, etc.
 
-## 🚀 Prerequisites
+Syntax Highlighting: Visual cues for Rust, JS, HTML, PHP, Laravel Blade, etc.
 
-*   **Python 3.x** installed on your system.
-*   (Optional) `pyperclip` for better clipboard support.
+Export Mode 1 (Single File): Combines all selected code into full_code.txt.
 
-## 🛠️ Installation
+Export Mode 2 (Separate Files): Copies selected files to a new directory while preserving the original folder structure.
 
-1.  Clone this repository or download the script.
-    ```bash
-    git clone https://github.com/your-username/ai-code-collector.git
-    cd ai-code-collector
-    ```
+Clipboard Support: One-click copy selected code.
 
-2.  (Optional) Install the clipboard library for the "Copy" button to work perfectly:
-    ```bash
-    pip install pyperclip
-    ```
-    *(Note: If you don't install this, the tool will try to use the default Windows clipboard, which usually works fine).*
+Prerequisites
 
-## 📖 How to Use
+Before running, ensure you have Rust and Cargo installed.
+Install Rust
 
-1.  **Place the script:** Copy the `collect_gui.py` file into the **root folder** of your web project (the folder where your `index.html` is).
-2.  **Run the script:**
-    ```bash
-    python collect_gui.py
-    ```
-3.  **Select Files:**
-    *   A window will pop up showing all your project files.
-    *   Uncheck any files you don't want to include (like large libraries or unfinished tests).
-4.  **Generate:**
-    *   Click **"📋 Copy to Clipboard"** to paste directly into ChatGPT.
-    *   Click **"💾 Save as .txt"** to create a file named `full_code.txt`.
+Linux Users Only
 
-## 📝 Output Format Example
+You may need to install development libraries for the GUI windowing system:
 
-When you paste the result to an AI, it will look like this:
+sudo apt-get install libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libssl-dev
 
-```text
-==================================================
-FILE: index.html
-==================================================
-<!DOCTYPE html>
-<html>
-... code ...
-</html>
 
-==================================================
-FILE: css/style.css
-==================================================
-body {
-    background-color: #fff;
-}
+How to Run
+
+Clone the repository:
+
+git clone [https://github.com/dewakuneiei/code-collector.git](https://github.com/dewakuneiei/code-collector.git)
+cd code-collector
+
+
+Run in Debug Mode (Faster compilation, slower app):
+
+cargo run
+
+
+Run in Release Mode (Optimized, smaller binary):
+Use this for actual daily use.
+
+cargo run --release
+
+
+Project Structure
+
+src/main.rs: Contains the entire application logic, UI rendering, and file handling.
+
+Cargo.toml: Manages dependencies (eframe, egui, rfd, arboard).
+
+Usage
+
+Click Open Project and select your coding project folder.
+
+Expand folders and check the boxes for the files you want to include.
+
+Select your Export Mode at the bottom:
+
+Single File: Best for pasting into ChatGPT/Claude.
+
+Separate Files: Best for extracting specific parts of a codebase to a new location.
+
+Click Save Selected or Copy to Clipboard.
+
+
+---
+
+### 3. Step-by-Step: What to do after Cloning
+
+If you are setting this up for the very first time on a new machine (or if a friend clones your repo):
+
+**Step 1: Install Rust**
+If you haven't already:
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+
+Step 2: Clone the Repo
+
+git clone <your-repo-url>
+cd code_collector
+
+
+Step 3: Check dependencies (Linux only)
+If you are on Windows or macOS, you can skip this. If you are on Ubuntu/Debian/WSL, run the command found in the "Prerequisites" section of the README above.
+
+Step 4: Build and Run
+This command will automatically download all dependencies listed in Cargo.toml and compile the app:
+
+cargo run --release
