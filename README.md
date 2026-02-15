@@ -1,158 +1,46 @@
-```md
 # 🚀 Rust Code Collector
 
-A powerful desktop GUI tool built with **Rust** and **egui**, designed for developers who need quick code extraction, structured exporting, and clean project navigation. Perfect for preparing context for LLMs, creating backups, migrating code, or extracting modules from large codebases.
+![Rust](https://img.shields.io/badge/Made_with-Rust-orange?logo=rust)
+![License](https://img.shields.io/badge/License-MIT-blue)
+![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20MacOS-lightgrey)
+
+**Code Collector** is a high-performance desktop GUI tool designed to help developers extract, filter, and export code from their projects. It is perfect for preparing context for **LLMs (ChatGPT, Claude, DeepSeek)**, creating backups, or reviewing large codebases.
+
+---
+
+## 📥 Download
+
+**Don't want to build from source?** Download the latest executable version here:
+
+[![Download](https://img.shields.io/badge/Download-Windows_x64_.zip-brightgreen?style=for-the-badge&logo=windows)](https://github.com/dewakuneiei/code-collector/releases/latest)
+
+*(Note: Currently built for Windows. Linux/Mac users, please build from source below.)*
 
 ---
 
 ## ✨ Features
 
-### 📂 Recursive Tree View
-- Explore your project using a nested folder UI.
-- Folders and files are displayed in a familiar tree structure.
-
-### 🔍 Real-Time Search
-- Filter files and directories instantly.
-- Automatically expands folders to reveal matching items.
-
-### 🧹 Smart Filtering
-Ignores common clutter directories automatically:
-```
-
-.git, node_modules, vendor, target, dist, build, storage, **pycache**, .idea, .vscode, etc.
-
-````
-
-### 🎨 Syntax Highlighting (UI)
-Colored file types for better readability:
-- Rust (.rs)
-- JavaScript / TypeScript
-- HTML / CSS
-- PHP
-- Laravel Blade
-- And more
+- **⚡ Blazing Fast:** Built with Rust and `egui` for instant startup and low memory usage.
+- **🌳 Tree View Navigation:** Explore your project with a familiar file explorer interface.
+- **🎨 Themes:** Switch between **Light**, **Dark**, or **System** themes (Apple-style Light mode included).
+- **🔍 Smart Search:** Instantly filter files across the entire project structure.
+- **🔄 Smart Refresh:** Reload your project folder **without losing your selected files**.
+- **🛡️ Integrity Check:** Detects if selected files have been deleted before exporting.
+- **📝 Export Modes:**
+  - **Single File:** Merges all code into one text file (great for AI context).
+  - **Separate Files:** Copies selected files to a new folder while preserving structure.
+- **🚫 Auto-Ignore:** Automatically skips clutter like `node_modules`, `.git`, `target`, `vendor`, etc.
 
 ---
 
-## 📦 Export Modes
+## 🛠️ Build from Source
 
-### **Mode 1 — Single File Export**
-- Merges all selected files into `full_code.txt`.
-- Ideal for ChatGPT, Claude, and documentation.
-- ✔ Auto-opens the generated file in your default editor.
+If you are a developer, you can clone and build the project yourself.
 
-### **Mode 2 — Structured Folder Export**
-- Copies selected files into a new directory.
-- Preserves original folder structure (e.g., `src/main.rs` → `src/main.rs`).
-- ✔ Auto-opens the output folder in your OS file explorer.
+### Prerequisites
+- Install [Rust & Cargo](https://rustup.rs/)
 
-### 📋 Clipboard Support
-- One-click **Copy Selected** → immediately placed in your system clipboard.
-
----
-
-## 🛠 Prerequisites
-
-Ensure Rust & Cargo are installed:
-
+### 1. Clone the Repository
 ```bash
-curl https://sh.rustup.rs -sSf | sh
-````
-
-### Linux Users Only
-
-You may need additional GUI libraries:
-
-```bash
-sudo apt-get install libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libssl-dev
-```
-
----
-
-## 🏃 How to Run
-
-Clone the repository:
-
-```bash
-git clone https://github.com/yourusername/code-collector.git
+git clone https://github.com/YOUR_USERNAME/code-collector.git
 cd code-collector
-```
-
-Run the application (Release Mode recommended):
-
-```bash
-cargo run --release
-```
-
----
-
-## 📁 Project Structure
-
-```
-src/
- └── main.rs      # Core application logic (UI, file handling, search, export)
-Cargo.toml        # Dependencies: eframe, egui, rfd, arboard, open
-```
-
----
-
-## 🎮 Usage Guide
-
-### 1. Open Your Project
-
-Click **Open Folder** and select the root directory of your codebase.
-
-### 2. Search & Select
-
-* Use the search bar to filter files (e.g., "service", "controller", "auth").
-* Check the boxes for everything you want to export.
-
-### 3. Choose Export Mode
-
-* **Single File** → for AI context or documentation.
-* **Separate Files** → for refactoring or migration.
-
-### 4. Perform Action
-
-* **Save Selected** → export to file or folder.
-* **Copy to Clipboard** → quick code extraction.
-
----
-
-## 🔧 Configuration
-
-To modify ignored directories, edit `src/main.rs`:
-
-```rust
-const IGNORE_DIRS: &[&str] = &[
-    ".git", ".vscode", "node_modules", "vendor", "__pycache__",
-    ".idea", "target", "dist", "build", "coverage", ".next",
-    ".nuxt", "storage"
-];
-```
-
----
-
-## 📜 License
-
-MIT — You are free to use, modify, and distribute.
-
----
-
-## ⭐ Support the Project
-
-If this tool helps you, please consider giving the repository a **star** ⭐ on GitHub!
-
-```
-
----
-
-If you want, I can also generate:
-
-✅ GitHub badges  
-✅ Screenshots section layout  
-✅ Logo banner  
-✅ Better project name suggestions  
-
-Just tell me!
-```

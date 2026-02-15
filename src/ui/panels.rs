@@ -12,13 +12,22 @@ pub fn show_top_panel(ctx: &egui::Context, app: &mut CodeCollectorApp) {
         ui.horizontal(|ui| {
             ui.heading("📂 Code Collector");
             ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                // Open Project
                 if ui.add_enabled(!app.is_loading, egui::Button::new("Open Project")).clicked() {
                     app.open_folder_dialog();
+                }
+                ui.add_space(5.0);
+
+                // --- Refresh Button ---
+                // Only show if a project is loaded
+                if app.project_path.is_some() {
+                    if ui.add_enabled(!app.is_loading, egui::Button::new("🔄")).on_hover_text("Refresh Folder").clicked() {
+                        app.refresh_project();
+                    }
                 }
 
                 ui.add_space(10.0);
                 ui.separator();
-                ui.add_space(10.0);
 
                 // --- THEME SELECTOR ---
                 egui::ComboBox::from_id_salt("theme_selector")

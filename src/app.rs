@@ -1,11 +1,12 @@
 use eframe::egui;
-use std::collections::VecDeque;
+use std::collections::{HashSet, VecDeque};
 use std::fs;
 use std::path::PathBuf;
 use std::sync::{Arc, atomic::{AtomicBool, Ordering}};
 use std::thread;
 use std::sync::mpsc::{Receiver, channel};
 
+// Internal modules
 use crate::models::{dir_node::DirNode, file_node::FileNode, export_mode::ExportMode, theme::ThemePreference};
 use crate::scanner::{ScanMessage, thread::read_dir_recursive_threaded};
 use crate::operations::{selection, export};
@@ -19,6 +20,10 @@ pub struct CodeCollectorApp {
     pub theme: ThemePreference,
     pub search_query: String,
     pub recent_files: VecDeque<FileNode>,
+
+    // --- REFRESH / SYNC STATE ---
+    pub preserved_selections: Option<HashSet<PathBuf>>,
+    pub show_missing_files_alert: bool,
 
     // --- LOADING STATE ---
     pub is_loading: bool,
@@ -37,6 +42,10 @@ impl Default for CodeCollectorApp {
             theme: ThemePreference::System,
             search_query: String::new(),
             recent_files: VecDeque::with_capacity(3),
+            
+            preserved_selections: None,
+            show_missing_files_alert: false,
+
             is_loading: false,
             loading_count: 0,
             loading_channel: None,
@@ -51,6 +60,20 @@ impl CodeCollectorApp {
         if let Some(path) = rfd::FileDialog::new().pick_folder() {
             self.project_path = Some(path.clone());
             self.start_scanning_thread(path);
+        }
+    }
+
+    pub fn refresh_project(&mut self) {
+        if let Some(path) = &self.project_path {
+            // 1. Capture current selections before scanning
+            let mut set = HashSet::new();
+            if let Some(root) = &self.root_node {
+                selection::collect_selected_paths(root, &mut set);
+            }
+            self.preserved_selections = Some(set);
+
+            // 2. Restart Scan
+            self.start_scanning_thread(path.clone());
         }
     }
 
@@ -103,6 +126,14 @@ impl CodeCollectorApp {
     }
 
     pub fn handle_save(&mut self) {
+        if let Some(root) = &self.root_node {
+            // Validation: Check if selected files still exist
+            if !selection::validate_selections(root) {
+                self.show_missing_files_alert = true;
+                return;
+            }
+        }
+
         match self.export_mode {
             ExportMode::OneFile => self.save_single_file(),
             ExportMode::SeparateFiles => self.save_separate_files(),
@@ -145,6 +176,12 @@ impl CodeCollectorApp {
 
     pub fn copy_to_clipboard(&mut self) {
         if let Some(root) = &self.root_node {
+            // Validation
+            if !selection::validate_selections(root) {
+                self.show_missing_files_alert = true;
+                return;
+            }
+
             let mut content = String::new();
             export::collect_content_string(root, &mut content);
             if !content.is_empty() {
@@ -162,35 +199,28 @@ impl CodeCollectorApp {
         }
     }
 
-    // --- Apply Theme ---
+    // --- Apple-style Theme Logic ---
     fn configure_theme(&self, ctx: &egui::Context) {
         match self.theme {
             ThemePreference::Dark => {
                 ctx.set_visuals(egui::Visuals::dark());
             }
             ThemePreference::Light => {
-                // Customized "Apple-like" Light Theme
                 let mut visuals = egui::Visuals::light();
-
-                // 1. Main Background: Soft Mac-like Gray (not harsh white)
+                // Soft Gray Background
                 visuals.panel_fill = egui::Color32::from_rgb(242, 242, 247); 
                 visuals.window_fill = egui::Color32::from_rgb(255, 255, 255);
-
-                // 2. Widgets (Buttons/Inputs): White to pop against the gray
+                // Crisp White Widgets
                 visuals.widgets.inactive.weak_bg_fill = egui::Color32::WHITE;
                 visuals.widgets.inactive.bg_fill = egui::Color32::WHITE;
-                
-                // 3. Selection Color: Apple Blue
+                // Apple Blue Selection
                 visuals.selection.bg_fill = egui::Color32::from_rgb(0, 122, 255);
                 visuals.selection.stroke = egui::Stroke::new(1.0, egui::Color32::from_rgb(0, 122, 255));
-
-                // 4. Text: Soft Black (Startk black on white is hard on eyes)
+                // Softer Text
                 visuals.override_text_color = Some(egui::Color32::from_rgb(30, 30, 30));
-
                 ctx.set_visuals(visuals);
             }
             ThemePreference::System => {
-                // Reset to default
                 ctx.set_visuals(egui::Visuals::default());
             }
         }
@@ -199,6 +229,10 @@ impl CodeCollectorApp {
 
 impl eframe::App for CodeCollectorApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        // 1. Apply Theme
+        self.configure_theme(ctx); 
+
+        // 2. Handle Background Thread
         let mut scan_completed = false; 
 
         if self.is_loading {
@@ -209,13 +243,20 @@ impl eframe::App for CodeCollectorApp {
                             self.loading_count += count;
                             ctx.request_repaint(); 
                         }
-                        ScanMessage::Finished(root) => {
+                        ScanMessage::Finished(mut root) => {
+                            // Restore selections if this was a refresh
+                            if let Some(old_selections) = &self.preserved_selections {
+                                selection::restore_selections(&mut root, old_selections);
+                            }
+                            self.preserved_selections = None;
+                            
                             self.root_node = Some(root);
                             self.is_loading = false;
                             scan_completed = true; 
                         }
                         ScanMessage::Cancelled => {
                             self.is_loading = false;
+                            self.preserved_selections = None;
                             self.status_text = "Scanning cancelled.".to_string();
                             self.root_node = None; 
                         }
@@ -223,20 +264,20 @@ impl eframe::App for CodeCollectorApp {
                 }
             }
         }
-        self.configure_theme(ctx); 
 
         if scan_completed {
             self.update_status();
         }
 
-        // Panels
+        // 3. Render Panels
         panels::show_top_panel(ctx, self);
         panels::show_bottom_panel(ctx, self);
         panels::show_side_panel(ctx, self);
 
-        // Central Panel
+        // 4. Central Area
         egui::CentralPanel::default().show(ctx, |ui| {
             if self.is_loading {
+                // Placeholder while loading
                 ui.vertical_centered(|ui| {
                    ui.add_space(50.0);
                 });
@@ -255,7 +296,9 @@ impl eframe::App for CodeCollectorApp {
             }
         });
 
-        // Loading Modal
+        // 5. Modals
+
+        // A. Loading Spinner
         if self.is_loading {
             egui::Window::new("Loading...")
                 .collapsible(false)
@@ -273,6 +316,35 @@ impl eframe::App for CodeCollectorApp {
                         if ui.add(egui::Button::new("Cancel").min_size([100.0, 30.0].into())).clicked() {
                             self.cancel_loading();
                         }
+                        ui.add_space(10.0);
+                    });
+                });
+        }
+
+        // B. Missing Files Alert
+        if self.show_missing_files_alert {
+            egui::Window::new("⚠️ Sync Error")
+                .collapsible(false)
+                .resizable(false)
+                .anchor(egui::Align2::CENTER_CENTER, [0.0, 0.0])
+                .show(ctx, |ui| {
+                    ui.set_min_width(300.0);
+                    ui.vertical_centered(|ui| {
+                        ui.add_space(10.0);
+                        ui.colored_label(egui::Color32::RED, "File System Changed");
+                        ui.label("Some selected files no longer exist on disk.");
+                        ui.label("Please refresh the project to update the view.");
+                        ui.add_space(15.0);
+                        
+                        ui.horizontal(|ui| {
+                            if ui.button("Refresh Now").clicked() {
+                                self.show_missing_files_alert = false;
+                                self.refresh_project();
+                            }
+                            if ui.button("Cancel").clicked() {
+                                self.show_missing_files_alert = false;
+                            }
+                        });
                         ui.add_space(10.0);
                     });
                 });

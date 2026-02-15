@@ -1,7 +1,8 @@
 [package]
 name = "code_collector"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
+description = "A desktop tool to extract and filter code for LLM context."
 
 [dependencies]
 eframe = "0.29.1"
@@ -12,7 +13,7 @@ rfd = "0.15"
 open = "5.3" 
 
 [profile.release]
-opt-level = "z"
-lto = true
-codegen-units = 1
-strip = true
+opt-level = "z"     # Optimize for size
+lto = true          # Enable Link Time Optimization
+codegen-units = 1   # Reduce parallel code generation for better optimization
+strip = true        # Strip symbols from binary to reduce size
