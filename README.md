@@ -42,5 +42,5 @@ If you are a developer, you can clone and build the project yourself.
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/code-collector.git
+git clone https://github.com/dewakuneiei/code-collector.git
 cd code-collector
