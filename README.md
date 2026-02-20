@@ -4,7 +4,17 @@
 ![License](https://img.shields.io/badge/License-MIT-blue)
 ![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20MacOS-lightgrey)
 
-**Code Collector** is a high-performance desktop GUI tool designed to help developers extract, filter, and export code from their projects. It is perfect for preparing context for **LLMs (ChatGPT, Claude, DeepSeek)**, creating backups, or reviewing large codebases.
+[cite_start]**Code Collector** is a high-performance desktop GUI tool designed to help developers extract, filter, and export code from their projects[cite: 60]. [cite_start]It is perfect for preparing context for **LLMs (ChatGPT, Claude, DeepSeek)**, creating backups, or reviewing large codebases[cite: 60, 61].
+
+---
+
+## 📸 Showcase
+
+Experience the fast, native interface in your preferred style:
+
+| 🌙 Dark Theme | ☀️ Light Theme |
+| :---: | :---: |
+| ![Code Collector Dark Theme](images/code_collector_dark.png) | ![Code Collector Light Theme](images/code_collector_light.png) |
 
 ---
 
@@ -20,27 +30,27 @@
 
 ## ✨ Features
 
-- **⚡ Blazing Fast:** Built with Rust and `egui` for instant startup and low memory usage.
-- **🌳 Tree View Navigation:** Explore your project with a familiar file explorer interface.
-- **🎨 Themes:** Switch between **Light**, **Dark**, or **System** themes (Apple-style Light mode included).
-- **🔍 Smart Search:** Instantly filter files across the entire project structure.
-- **🔄 Smart Refresh:** Reload your project folder **without losing your selected files**.
-- **🛡️ Integrity Check:** Detects if selected files have been deleted before exporting.
-- **📝 Export Modes:**
-  - **Single File:** Merges all code into one text file (great for AI context).
-  - **Separate Files:** Copies selected files to a new folder while preserving structure.
-- **🚫 Auto-Ignore:** Automatically skips clutter like `node_modules`, `.git`, `target`, `vendor`, etc.
+* [cite_start]**⚡ Blazing Fast:** Built with Rust and `egui` for instant startup and low memory usage[cite: 62].
+* [cite_start]**🌳 Tree View Navigation:** Explore your project with a familiar file explorer interface[cite: 63].
+* [cite_start]**🎨 Themes:** Switch between **Light**, **Dark**, or **System** themes (Apple-style Light mode included)[cite: 64].
+* [cite_start]**🔍 Smart Search:** Instantly filter files across the entire project structure[cite: 65].
+* [cite_start]**🔄 Smart Refresh:** Reload your project folder **without losing your selected files**[cite: 66].
+* [cite_start]**🛡️ Integrity Check:** Detects if selected files have been deleted before exporting[cite: 67].
+* **📝 Export Modes:**
+    * [cite_start]**Single File:** Merges all code into one text file (great for AI context)[cite: 68].
+    * [cite_start]**Separate Files:** Copies selected files to a new folder while preserving structure[cite: 69].
+* [cite_start]**🚫 Auto-Ignore:** Automatically skips clutter like `node_modules`, `.git`, `target`, `vendor`, etc[cite: 70].
 
 ---
 
 ## 🛠️ Build from Source
 
-If you are a developer, you can clone and build the project yourself.
+[cite_start]If you are a developer, you can clone and build the project yourself[cite: 70].
 
 ### Prerequisites
-- Install [Rust & Cargo](https://rustup.rs/)
+* Install [Rust & Cargo](https://rustup.rs/)
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/dewakuneiei/code-collector.git
+git clone [https://github.com/dewakuneiei/code-collector.git](https://github.com/dewakuneiei/code-collector.git)
 cd code-collector
